@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <clipPath id="rounded">
+      <rect x="0" y="0" width="512" height="512" rx="116" ry="116"/>
+    </clipPath>
+  </defs>
+
+  <!-- 배경: 따뜻한 주황 둥근사각 + 부드러운 헤일로 -->
+  <g clip-path="url(#rounded)">
+    <rect x="0" y="0" width="512" height="512" fill="#FF9633"/>
+    <circle cx="256" cy="214" r="190" fill="#FFB258" opacity="0.45"/>
+    <circle cx="256" cy="214" r="138" fill="#FFC983" opacity="0.40"/>
+  </g>
+
+  <!-- 핀 그림자 -->
+  <ellipse cx="256" cy="452" rx="72" ry="15" fill="#7A3B00" opacity="0.18"/>
+
+  <!-- 위치 핀 (흰색 마커) -->
+  <circle cx="256" cy="196" r="128" fill="#FFFFFF"/>
+  <path d="M160 278 L352 278 L256 452 Z" fill="#FFFFFF"/>
+
+  <!-- 똥 마스코트 (스택형) -->
+  <ellipse cx="256" cy="218" rx="88" ry="33" fill="#7C4A22"/>
+  <ellipse cx="256" cy="180" rx="66" ry="28" fill="#8C5A2C"/>
+  <ellipse cx="256" cy="146" rx="46" ry="24" fill="#9E6A38"/>
+  <circle cx="256" cy="120" r="15" fill="#A87544"/>
+  <circle cx="256" cy="108" r="7" fill="#B5824F"/>
+
+  <!-- 볼터치 -->
+  <circle cx="220" cy="190" r="9" fill="#FF9E54" opacity="0.55"/>
+  <circle cx="292" cy="190" r="9" fill="#FF9E54" opacity="0.55"/>
+
+  <!-- 눈 -->
+  <circle cx="236" cy="168" r="14" fill="#FFFFFF"/>
+  <circle cx="276" cy="168" r="14" fill="#FFFFFF"/>
+  <circle cx="238" cy="170" r="7" fill="#3A2A1A"/>
+  <circle cx="278" cy="170" r="7" fill="#3A2A1A"/>
+  <circle cx="234" cy="165" r="2.6" fill="#FFFFFF"/>
+  <circle cx="274" cy="165" r="2.6" fill="#FFFFFF"/>
+
+  <!-- 미소 -->
+  <path d="M236 186 Q256 204 276 186" fill="none" stroke="#3A2A1A" stroke-width="6" stroke-linecap="round"/>
+</svg>
