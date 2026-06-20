@@ -26,11 +26,14 @@ COPY seoul_toilet/ ./seoul_toilet/
 # 3) 컨테이너 기본 환경변수
 #    - HOST는 반드시 0.0.0.0: 컨테이너 외부(호스트)에서 접근 가능하게 한다.
 #    - CACHE_DIR은 /data(볼륨)로 빼 재시작 간 다운로드 캐시를 유지한다.
-#    - 도메인/리버스 프록시 뒤에 둘 경우 SEOUL_TOILET_PUBLIC_HOST=<도메인> 를 추가로 지정.
+#    - PUBLIC_HOST: 리버스 프록시(PlayMCP/카카오 등)가 보내는 공개 Host. /mcp의 Host
+#      허용목록에 추가돼 DNS 리바인딩 보호를 유지하면서 해당 도메인 요청을 통과시킨다.
+#      다른 도메인에 배포하면 런타임 -e 또는 이 값으로 덮어쓴다(쉼표로 여러 개 가능).
 ENV SEOUL_TOILET_HOST=0.0.0.0 \
     SEOUL_TOILET_PORT=8000 \
     SEOUL_TOILET_CACHE_DIR=/data \
-    SEOUL_TOILET_DOWNLOAD_ON_START=1
+    SEOUL_TOILET_DOWNLOAD_ON_START=1 \
+    SEOUL_TOILET_PUBLIC_HOST=geup-ddong-seoul.playmcp-endpoint.kakaocloud.io
 
 # 4) 비루트 사용자 + 쓰기 가능한 캐시 디렉터리
 RUN useradd --create-home --uid 10001 app \

@@ -52,16 +52,18 @@ def _csv_env(name: str) -> list[str]:
 # 리버스 프록시(도메인) 뒤에서 서비스하면 MCP Streamable HTTP의 DNS 리바인딩 보호가
 # Host 헤더를 검사해 기본적으로 localhost 외 도메인을 421(Invalid Host header)로 막는다.
 # 공개 호스트를 SEOUL_TOILET_PUBLIC_HOST 로 지정하면 허용 목록에 추가한다(도메인 비하드코딩).
-PUBLIC_HOST = os.environ.get("SEOUL_TOILET_PUBLIC_HOST", "").strip()
+# 쉼표로 여러 공개 호스트 지원(예: 자체 도메인 + PlayMCP 프록시 엔드포인트 호스트).
+# PlayMCP 등 프록시가 우리 백엔드로 포워딩할 때 보내는 Host도 여기 넣어야 421을 피한다.
+PUBLIC_HOSTS = _csv_env("SEOUL_TOILET_PUBLIC_HOST")
 DNS_REBINDING_PROTECTION = os.environ.get("SEOUL_TOILET_DNS_REBINDING_PROTECTION", "1") != "0"
 
 _allowed_hosts = _csv_env("SEOUL_TOILET_ALLOWED_HOSTS") or [
     "localhost", "127.0.0.1", "localhost:*", "127.0.0.1:*", HOST, f"{HOST}:*",
 ]
 _allowed_origins = _csv_env("SEOUL_TOILET_ALLOWED_ORIGINS")
-if PUBLIC_HOST:
-    _allowed_hosts += [PUBLIC_HOST, f"{PUBLIC_HOST}:*"]
-    _allowed_origins += [f"https://{PUBLIC_HOST}", f"http://{PUBLIC_HOST}"]
+for _h in PUBLIC_HOSTS:
+    _allowed_hosts += [_h, f"{_h}:*"]
+    _allowed_origins += [f"https://{_h}", f"http://{_h}"]
 
 _transport_security = TransportSecuritySettings(
     enable_dns_rebinding_protection=DNS_REBINDING_PROTECTION,

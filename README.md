@@ -110,7 +110,7 @@ python -m seoul_toilet.server
 | `SEOUL_TOILET_PORT` | `8000` | 포트 |
 | `SEOUL_TOILET_CACHE_DIR` | `./data_cache` | xlsx/zip 캐시 디렉터리 |
 | `SEOUL_TOILET_DOWNLOAD_ON_START` | `1` | 시작 시 캐시가 없으면 1회 다운로드(`0`이면 비활성) |
-| `SEOUL_TOILET_PUBLIC_HOST` | (없음) | 리버스 프록시 뒤 공개 도메인. 지정 시 MCP `/mcp`의 Host/Origin 허용 목록에 추가(예: `techsummit.asia`) |
+| `SEOUL_TOILET_PUBLIC_HOST` | (없음) | 리버스 프록시 뒤 공개 도메인. 지정 시 MCP `/mcp`의 Host/Origin 허용 목록에 추가. **쉼표로 여러 개** 지정 가능(예: `techsummit.asia,foo.playmcp-endpoint.kakaocloud.io`). PlayMCP 등 프록시가 보내는 Host도 함께 넣어야 421을 피한다 |
 | `SEOUL_TOILET_ALLOWED_HOSTS` | (자동) | 허용 Host 헤더 목록(쉼표 구분). 비우면 localhost 계열 + `PUBLIC_HOST` 자동 구성 |
 | `SEOUL_TOILET_ALLOWED_ORIGINS` | (자동) | 허용 Origin 목록(쉼표 구분, 브라우저 클라이언트용) |
 | `SEOUL_TOILET_DNS_REBINDING_PROTECTION` | `1` | MCP DNS 리바인딩 보호(`0`이면 비활성) |
