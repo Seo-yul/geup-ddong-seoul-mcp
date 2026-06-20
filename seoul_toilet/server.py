@@ -23,6 +23,7 @@ from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
+from mcp.types import ToolAnnotations
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -75,6 +76,7 @@ mcp = FastMCP(
     host=HOST,
     port=PORT,
     streamable_http_path="/mcp",
+    stateless_http=True,  # PlayMCP 권장: 세션 없는 stateless 전송
     transport_security=_transport_security,
     instructions=(
         "서울시 공중화장실(스마트서울맵 theme_id=100106) 조회 서버. "
@@ -102,7 +104,25 @@ def _empty_notice() -> dict:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@mcp.tool(
+    description=(
+        "Find the nearest public toilets to a location, ordered by distance, using "
+        "Geup-Ddong Seoul(급똥서울), a Seoul public-toilet finder built on SmartSeoulMap "
+        "theme_id=100106. Use this first when a user urgently needs a toilet: pass their "
+        "WGS84 latitude and longitude. Optional: open_now=true keeps only toilets open now "
+        "(KST), require_disabled=true keeps wheelchair-accessible ones, radius_m caps the "
+        "search radius in meters, limit sets how many to return. Each result carries "
+        "distance_m plus open hours, open_now, toilet/accessible types, amenities, safety "
+        "facilities, manager and phone."
+    ),
+    annotations=ToolAnnotations(
+        title="Find nearest toilets",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
 def find_nearest_toilets(
     latitude: float,
     longitude: float,
@@ -134,7 +154,24 @@ def find_nearest_toilets(
     )
 
 
-@mcp.tool()
+@mcp.tool(
+    description=(
+        "Search public toilets by free text or administrative district(구) using "
+        "Geup-Ddong Seoul(급똥서울), a Seoul public-toilet finder built on SmartSeoulMap "
+        "theme_id=100106. Use when latitude/longitude are unknown. 'query' is a "
+        "case-insensitive partial match over name, road and lot-number address, manager "
+        "and keyword; 'district' filters by gu name. Optional: open_now=true keeps only "
+        "toilets open now (KST), require_disabled=true keeps wheelchair-accessible ones, "
+        "limit caps results. Call dataset_info for the list of valid district names."
+    ),
+    annotations=ToolAnnotations(
+        title="Search toilets",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
 def search_toilets(
     query: Optional[str] = None,
     district: Optional[str] = None,
@@ -165,7 +202,22 @@ def search_toilets(
     )
 
 
-@mcp.tool()
+@mcp.tool(
+    description=(
+        "Get full details of a single public toilet by its content_id using "
+        "Geup-Ddong Seoul(급똥서울), a Seoul public-toilet finder built on SmartSeoulMap "
+        "theme_id=100106. Pass a content_id taken from another tool's result (for example "
+        "'rest2025_0448'). Returns the toilet's fields plus a raw 'details' map (original "
+        "title to content)."
+    ),
+    annotations=ToolAnnotations(
+        title="Get toilet detail",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
 def get_toilet(content_id: str) -> dict:
     """content_id로 화장실 1건의 상세 정보를 조회한다(원문 상세 details 포함).
 
@@ -180,7 +232,21 @@ def get_toilet(content_id: str) -> dict:
     return rec
 
 
-@mcp.tool()
+@mcp.tool(
+    description=(
+        "Get dataset metadata for Geup-Ddong Seoul(급똥서울), a Seoul public-toilet finder "
+        "built on SmartSeoulMap theme_id=100106: total toilet count, last refresh time, "
+        "data source, and per-district counts (the list of valid district/구 names to pass "
+        "to the other tools)."
+    ),
+    annotations=ToolAnnotations(
+        title="Dataset info",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
 def dataset_info() -> dict:
     """데이터셋 메타 정보: 총 건수, 갱신 시각, 출처, 자치구별 개수(유효한 구 이름 목록)."""
     return store.info()
