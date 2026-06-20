@@ -1,0 +1,24 @@
+[project]
+name = "geup-ddong-seoul-mcp"
+version = "0.1.0"
+description = "서울시 공중화장실(스마트서울맵 theme_id=100106) 조회 MCP 서버 (Streamable HTTP)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.10",
+    "requests>=2.31",
+    "openpyxl>=3.1",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+geup-ddong-seoul = "seoul_toilet.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["seoul_toilet"]
