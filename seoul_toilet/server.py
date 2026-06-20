@@ -23,7 +23,7 @@ from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
-from mcp.types import ToolAnnotations
+from mcp.types import Icon, ToolAnnotations
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -69,6 +69,17 @@ _transport_security = TransportSecuritySettings(
     allowed_origins=sorted(set(_allowed_origins)),
 )
 
+# 서비스 아이콘: 공개 repo의 raw URL을 기본값으로 두고 환경변수로 재정의 가능.
+# 서버(serverInfo)와 각 tool에 연결되어 MCP 클라이언트 UI에 노출된다.
+ICON_BASE_URL = os.environ.get(
+    "SEOUL_TOILET_ICON_BASE_URL",
+    "https://raw.githubusercontent.com/Seo-yul/geup-ddong-seoul-mcp/main/assets",
+).rstrip("/")
+ICONS = [
+    Icon(src=f"{ICON_BASE_URL}/icon.svg", mimeType="image/svg+xml", sizes=["any"]),
+    Icon(src=f"{ICON_BASE_URL}/icon-256.png", mimeType="image/png", sizes=["256x256"]),
+]
+
 store = ToiletStore(cache_dir=CACHE_DIR) if CACHE_DIR else ToiletStore()
 
 mcp = FastMCP(
@@ -77,6 +88,7 @@ mcp = FastMCP(
     port=PORT,
     streamable_http_path="/mcp",
     stateless_http=True,  # PlayMCP 권장: 세션 없는 stateless 전송
+    icons=ICONS,
     transport_security=_transport_security,
     instructions=(
         "서울시 공중화장실(스마트서울맵 theme_id=100106) 조회 서버. "
@@ -115,6 +127,7 @@ def _empty_notice() -> dict:
         "distance_m plus open hours, open_now, toilet/accessible types, amenities, safety "
         "facilities, manager and phone."
     ),
+    icons=ICONS,
     annotations=ToolAnnotations(
         title="Find nearest toilets",
         readOnlyHint=True,
@@ -164,6 +177,7 @@ def find_nearest_toilets(
         "toilets open now (KST), require_disabled=true keeps wheelchair-accessible ones, "
         "limit caps results. Call dataset_info for the list of valid district names."
     ),
+    icons=ICONS,
     annotations=ToolAnnotations(
         title="Search toilets",
         readOnlyHint=True,
@@ -210,6 +224,7 @@ def search_toilets(
         "'rest2025_0448'). Returns the toilet's fields plus a raw 'details' map (original "
         "title to content)."
     ),
+    icons=ICONS,
     annotations=ToolAnnotations(
         title="Get toilet detail",
         readOnlyHint=True,
@@ -239,6 +254,7 @@ def get_toilet(content_id: str) -> dict:
         "data source, and per-district counts (the list of valid district/구 names to pass "
         "to the other tools)."
     ),
+    icons=ICONS,
     annotations=ToolAnnotations(
         title="Dataset info",
         readOnlyHint=True,

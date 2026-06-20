@@ -1,4 +1,8 @@
-# 급똥 서울 (geup-ddong-seoul-mcp)
+<p align="center">
+  <img src="assets/icon-256.png" alt="급똥 서울 (Geup-Ddong Seoul)" width="140" height="140" />
+</p>
+
+<h1 align="center">급똥 서울 (geup-ddong-seoul-mcp)</h1>
 
 서울시 공중화장실 데이터(스마트서울맵 테마 `theme_id=100106`)를 조회하는 **MCP 서버**입니다.
 급할 때 내 위치에서 가까운, 지금 열려 있는 화장실을 찾는 것이 핵심 기능입니다.
