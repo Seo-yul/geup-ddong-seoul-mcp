@@ -121,7 +121,7 @@ def _empty_notice() -> dict:
 @mcp.tool(
     description=(
         "Find the nearest public toilets to a location, ordered by distance, using "
-        "Geup-Ddong Seoul(급똥서울), a Seoul public-toilet finder built on SmartSeoulMap "
+        "Geup-Ddong Seoul(급똥 서울), a Seoul public-toilet finder built on SmartSeoulMap "
         "theme_id=100106. Use this first when a user urgently needs a toilet: pass their "
         "WGS84 latitude and longitude. Optional: open_now=true keeps only toilets open now "
         "(KST), require_disabled=true keeps wheelchair-accessible ones, radius_m caps the "
@@ -172,7 +172,7 @@ def find_nearest_toilets(
 @mcp.tool(
     description=(
         "Search public toilets by free text or administrative district(구) using "
-        "Geup-Ddong Seoul(급똥서울), a Seoul public-toilet finder built on SmartSeoulMap "
+        "Geup-Ddong Seoul(급똥 서울), a Seoul public-toilet finder built on SmartSeoulMap "
         "theme_id=100106. Use when latitude/longitude are unknown. 'query' is a "
         "case-insensitive partial match over name, road and lot-number address, manager "
         "and keyword; 'district' filters by gu name. Optional: open_now=true keeps only "
@@ -221,7 +221,7 @@ def search_toilets(
 @mcp.tool(
     description=(
         "Get full details of a single public toilet by its content_id using "
-        "Geup-Ddong Seoul(급똥서울), a Seoul public-toilet finder built on SmartSeoulMap "
+        "Geup-Ddong Seoul(급똥 서울), a Seoul public-toilet finder built on SmartSeoulMap "
         "theme_id=100106. Pass a content_id taken from another tool's result (for example "
         "'rest2025_0448'). Returns the toilet's fields plus a raw 'details' map (original "
         "title to content)."
@@ -251,7 +251,7 @@ def get_toilet(content_id: str) -> dict:
 
 @mcp.tool(
     description=(
-        "Get dataset metadata for Geup-Ddong Seoul(급똥서울), a Seoul public-toilet finder "
+        "Get dataset metadata for Geup-Ddong Seoul(급똥 서울), a Seoul public-toilet finder "
         "built on SmartSeoulMap theme_id=100106: total toilet count, last refresh time, "
         "data source, and per-district counts (the list of valid district/구 names to pass "
         "to the other tools)."
