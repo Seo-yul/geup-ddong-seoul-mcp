@@ -208,6 +208,25 @@ curl -fsS -X POST -H "X-Refresh-Token: $SEOUL_TOILET_REFRESH_TOKEN" http://127.0
 # 또는: -H "Authorization: Bearer $TOKEN"  /  "...?token=$TOKEN"
 ```
 
+## 데이터 스냅샷 (오프라인 폴백)
+
+기동 시 원격 다운로드가 실패하거나(네트워크/egress 차단 등) `SEOUL_TOILET_DOWNLOAD_ON_START=0`
+인 경우, 패키지에 포함된 시드 스냅샷 `seoul_toilet/seed/contents.xlsx` 로 폴백해 **데이터가 비지
+않습니다.** 적재 우선순위는 **캐시 → 원격 다운로드 → 시드** 입니다(시드는 repo·이미지에 동봉).
+
+스냅샷을 최신화하려면 아래로 갱신 후 커밋합니다.
+
+```bash
+python scripts/update_snapshot.py        # requests/openpyxl 필요
+# 로컬에 의존성이 없으면 컨테이너로:
+podman run --rm --user root -v "$PWD/seoul_toilet:/host" geup-ddong-seoul-mcp \
+  python -c "from seoul_toilet.data import download_zip,extract_inner_xlsx; import pathlib; \
+xb=extract_inner_xlsx(download_zip()); p=pathlib.Path('/host/seed/contents.xlsx'); \
+p.parent.mkdir(parents=True,exist_ok=True); p.write_bytes(xb); print(len(xb))"
+
+git add seoul_toilet/seed/contents.xlsx && git commit -m "데이터 스냅샷 갱신"
+```
+
 ## 개방시간 해석 한계
 
 `개방시간` 원문은 `정시(08:00~21:00)`, `상시(00:00~24:00)`, `평일(09:00~18:00) 주말휴무` 등

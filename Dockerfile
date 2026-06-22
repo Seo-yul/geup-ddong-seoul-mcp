@@ -21,6 +21,8 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
 # 2) 애플리케이션 소스 (패키지만 복사)
+#    seoul_toilet/seed/contents.xlsx(번들 시드 스냅샷)도 함께 포함된다.
+#    -> 기동 시 다운로드가 실패해도 이 시드로 폴백하므로 데이터가 비지 않는다.
 COPY seoul_toilet/ ./seoul_toilet/
 
 # 3) 컨테이너 기본 환경변수

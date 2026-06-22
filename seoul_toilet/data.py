@@ -57,6 +57,9 @@ _HEADERS = {
 
 DEFAULT_CACHE_DIR = Path(__file__).resolve().parent.parent / "data_cache"
 INNER_XLSX_NAME = "contents.xlsx"
+# 다운로드 실패/불가 시 폴백할 번들 시드 스냅샷(패키지·이미지에 포함).
+# scripts/update_snapshot.py 로 갱신한다.
+SEED_XLSX = Path(__file__).resolve().parent / "seed" / INNER_XLSX_NAME
 
 # 데이터셋 라벨(설명용)
 THEME_NAME = "서울시 공중화장실"
@@ -418,6 +421,14 @@ class ToiletStore:
         self._set(records, f"cache:{path}")
         return True
 
+    def load_from_seed(self) -> bool:
+        """번들된 시드 스냅샷을 적재(다운로드 실패/불가 시 폴백). 성공 시 True."""
+        if not SEED_XLSX.exists():
+            return False
+        records = parse_xlsx(SEED_XLSX.read_bytes())
+        self._set(records, f"seed:{SEED_XLSX}")
+        return True
+
     def refresh(self, timeout: int = 60) -> dict:
         """원격에서 다시 받아 파싱하고 캐시에 저장한다."""
         zip_bytes = download_zip(timeout=timeout)
@@ -431,13 +442,25 @@ class ToiletStore:
         return self.info()
 
     def ensure_loaded(self, allow_download: bool = True, timeout: int = 60) -> dict:
-        """데이터가 비어있으면 캐시->다운로드 순으로 적재."""
+        """데이터가 비어있으면 캐시->다운로드->시드 순으로 적재.
+
+        다운로드가 비활성이거나 실패하면 번들된 시드 스냅샷으로 폴백한다.
+        """
         if self.count > 0:
             return self.info()
         if self.load_from_cache():
             return self.info()
         if allow_download:
-            return self.refresh(timeout=timeout)
+            try:
+                return self.refresh(timeout=timeout)
+            except Exception:
+                # 다운로드 실패 -> 시드 폴백. 시드도 없으면 원래 예외를 올린다.
+                if self.load_from_seed():
+                    return self.info()
+                raise
+        # 다운로드 비활성 -> 시드 폴백
+        if self.load_from_seed():
+            return self.info()
         return self.info()
 
     # --- 메타 ---
